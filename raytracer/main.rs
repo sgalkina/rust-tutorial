@@ -1,3 +1,9 @@
+mod vec;
+mod color;
+
+use vec::Color;
+use color::write_color;
+
 use std::fs::File;
 use std::io::Write;
 use std::io::stdout;
@@ -14,13 +20,13 @@ fn main() -> std::io::Result<()> {
         print!("\rScanlines remaining: {}", h);
         stdout().flush();
         for w in 0..im_width {
-            let r: f64 = w as f64 / (im_width as f64 - 1.0);
-            let g: f64 = h as f64 / (im_height as f64 - 1.0);
-            let b: f64 = 0.25;
+            let color = Color {
+                x: w as f64 / (im_width as f64 - 1.0),
+                y: h as f64 / (im_height as f64 - 1.0),
+                z: 0.25,
+            };
 
-            let c = 255.99;
-
-            let line = format!("{} {} {}\n", (c*r).round(), (c*g).round(), (c*b).round());
+            let line = write_color(&color);
             file.write_all(line.as_bytes()).expect("Failed to write");
         }
     }
